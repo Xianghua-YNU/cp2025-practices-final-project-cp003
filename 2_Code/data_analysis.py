@@ -149,7 +149,7 @@ def estimate_max_lyapunov(mu, y0, dt=0.1, T=100, d0=1e-6):
         sol = solve_ivp(rt_deriv, [0, dt], y, args=(mu,), t_eval=[dt])
         sol_perturbed = solve_ivp(rt_deriv, [0, dt], y_perturbed, args=(mu,), t_eval=[dt])
         
-        y = sol.y[:-1]
+        y = sol.y[:, -1]
         y_perturbed = sol_perturbed.y[:, -1]
 
         delta_y = y_perturbed - y
