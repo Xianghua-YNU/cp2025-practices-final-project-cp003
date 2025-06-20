@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from numpy.linalg import norm
 
+# 模块四：轨道和稳定性图像绘制
 def compute_jacobi(state, mu):
     x, y, vx, vy = state
     r1 = np.sqrt((x + mu)**2 + y**2)
