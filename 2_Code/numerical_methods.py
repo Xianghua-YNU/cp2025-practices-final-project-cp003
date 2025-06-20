@@ -2,20 +2,32 @@
 核心数值算法模块：包含各种数值方法实现。
 """
 import numpy as np
+from scipy.optimize import root
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+from numpy.linalg import norm
 
-def solve_ode(initial_conditions, time_points):
-    """
-    示例：常微分方程求解器。
-    """
-    print("Solving ODE...")
-    # 这里是数值求解算法的实现
-    # 例如：欧拉法、龙格-库塔法等
-    solution = np.zeros((len(time_points), len(initial_conditions)))
-    solution[0] = initial_conditions
-    # 假设一个简单的增长模型
-    # for i in range(1, len(time_points)):
-    #     dt = time_points[i] - time_points[i-1]
-    #     solution[i] = solution[i-1] + dt * solution[i-1] * 0.1 # 简单的指数增长
-    return solution
+# 有效势函数 Φ（用于绘制零速度曲线）
+def effective_potential(x, y, mu):
+    r1 = np.sqrt((x + mu)**2 + y**2)
+    r2 = np.sqrt((x - 1 + mu)**2 + y**2)
+    return 0.5*(x**2 + y**2) + mu1/np.sqrt(r1**2) + mu2/np.sqrt(r2**2)
 
-# 可以添加更多数值方法，如积分、求根、矩阵运算等
+# RTBP 微分方程
+def rtbp_rhs(t, state, mu):
+    x, y, vx, vy = state
+    r1 = np.sqrt((x + mu)**2 + y**2)
+    r2 = np.sqrt((x - 1 + mu)**2 + y**2)
+    dUx = x - mu1*(x + mu)/r1**3 - mu2*(x - 1 + mu)/r2**3
+    dUy = y - mu1*y/r1**3 - mu2*y/r2**3
+    ax = 2*vy + dUx
+    ay = -2*vx + dUy
+    return [vx, vy, ax, ay]
+
+# 模拟轨道
+def simulate_orbit(point_name, delta=[1e-2, 0, 0, 0], t_max=100):
+    x0, y0 = L_points[point_name]
+    state0 = [x0 + delta[0], y0 + delta[1], delta[2], delta[3]]
+    sol = solve_ivp(rtbp_rhs, [0, t_max], state0, args=(mu,),
+                    method='DOP853', rtol=1e-12, atol=1e-10)
+    return sol
