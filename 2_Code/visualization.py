@@ -72,3 +72,31 @@ def plot_orbit(sol, point_name, C=None, show_zvc=True):
     ax.grid(True)
     ax.set_aspect('equal')
     plt.show()
+
+# L1 与 L4 点扰动轨道稳定性对比
+def plot_stability_comparison(mu):
+    import matplotlib.pyplot as plt
+    from scipy.integrate import solve_ivp
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    # 对 L1 和 L4 模拟轨道
+    points = {
+        'L1': {'delta': [0, 0, 0, 0.1], 'color': 'r'},
+        'L4': {'delta': [0.01, 0, 0, 0], 'color': 'g'}
+    }
+
+    for label, config in points.items():
+        sol = simulate_orbit(label, delta=config['delta'], t_max=100)
+        x, y = sol.y[0], sol.y[1]
+        r = np.sqrt(x**2 + y**2)
+        ax.plot(sol.t, r, label=label, color=config['color'])
+
+    ax.set_xlabel("时间 $t$")
+    ax.set_ylabel("距离 $r(t)$")
+    ax.set_title("L1 与 L4 点扰动轨道稳定性对比")
+    ax.legend()
+    ax.grid(True)
+    plt.tight_layout()
+    plt.show()
+plot_stability_comparison(mu)
