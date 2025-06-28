@@ -73,7 +73,7 @@ for name, guess in initial_guesses.items():
 
 # 模块二：运动方程与轨道模拟
 # 参数设置（地月系统）
-mu = 0.04
+mu = 0.0123
 mu1, mu2 = 1 - mu, mu
 
 # 拉格朗日点
